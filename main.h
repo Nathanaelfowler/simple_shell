@@ -8,7 +8,8 @@
 #include <sys/wait.h>
 #include <string.h>
 
-char **split_string(char *string, int word_number);
+char **split_string(char *string, char **divided_string);
+void execute_program(char *buffer, char *argv[]);
 
 #endif
 

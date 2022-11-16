@@ -2,16 +2,14 @@
 
 /**
  * main - create a super simple shell
- * @argc: argument count
- * @argv: argument vectors
+ * @argc: the argument count
+ * @argv: the argument vectors
  * Return: 0 on success
  */
 int main(int argc __attribute__((unused)), char *argv[])
 {
 	char *buffer, *check_exit = "exit";
-	char **argvec;
-	size_t buffer_size = 10;
-	int i, number_of_words = 1, value;
+	size_t buffer_size = 0;
 	pid_t pid;
 
 	buffer = malloc(sizeof(char) * buffer_size);
@@ -23,51 +21,78 @@ int main(int argc __attribute__((unused)), char *argv[])
 	{
 		buffer[strcspn(buffer, "\n")] = 0;
 		if (strcmp(buffer, check_exit) == 0)
+		{
+			free(buffer);
 			return (0);
+		}
 		pid = fork();
 		if (pid == -1)
+		{
+			free(buffer);
 			return (-1);
+		}
 		if (pid == 0)
 		{
-			/*Use strtok to split the buffer with space as separator*/
-			for (i = 0; i < (int)strlen(buffer); i++)
-			{
-				if (buffer[i] == ' ')
-				number_of_words++;
-			}
-			argvec = split_string(buffer, number_of_words);
-			/*Run execve on the command*/
-			value = execvp(argvec[0], argvec);
-			if (value == -1)
-				perror(argv[0]);
+			execute_program(buffer, argv);
 		}
 		else
 		{
 			wait(NULL);
+			free(buffer);
+			buffer = malloc(sizeof(char) * buffer_size);
+			if (buffer == NULL)
+				exit(1);
 			printf("$ ");
 		}
 	}
+	free(buffer);
 	return (0);
+}
+
+/**
+ * execute_program - execute program passed with execvp
+ * @buffer: the buffer to be executed
+ * @argv: the argument vectors
+ */
+void execute_program(char *buffer, char *argv[])
+{
+	int i, number_of_words = 1, value;
+	char **argvec, **divided_string;
+
+	/*Use strtok to split the buffer with space as separator*/
+	for (i = 0; i < (int)strlen(buffer); i++)
+	{
+		if (buffer[i] == ' ')
+		number_of_words++;
+	}
+	divided_string = malloc(sizeof(char *) * number_of_words);
+	if (divided_string == NULL)
+		exit(1);
+	/*Put the split string inside argv array*/
+	argvec = split_string(buffer, divided_string);
+	/*Run execve on the command*/
+	value = execvp(argvec[0], argvec);
+	if (value == -1)
+	{
+		free(divided_string);
+		perror(argv[0]);
+		printf("$ ");
+	}
 }
 
 /**
  * split_string - split a string with strtok
  * @string: the string to be divided
- * @word_number: the number of words in the string
+ * @divided_string: the number of words in the string
  * Return: an array of the individual words in the string
  */
-char **split_string(char *string, int word_number)
+char **split_string(char *string, char **divided_string)
 {
 	/*create divided_string variable*/
-	char **divided_string;
 	char *splits;
 	char *sep;
 	int i = 0;
 
-	/*create token variable*/
-	divided_string = malloc(sizeof(char *) * word_number);
-	if (divided_string == NULL)
-		exit(1);
 	sep = " ";
 	/*use strtok to get first token*/
 	splits = strtok(string, sep);
