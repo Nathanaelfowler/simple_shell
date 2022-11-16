@@ -10,6 +10,6 @@
 
 char **split_string(char *string, char **divided_string);
 void execute_program(char *buffer, char *argv[]);
+extern char **environ;
 
 #endif
-
