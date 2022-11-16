@@ -9,7 +9,7 @@
 int main(int argc __attribute__((unused)), char *argv[])
 {
 	char *buffer, *check_exit = "exit";
-	size_t buffer_size = 0;
+	size_t buffer_size = 1;
 	pid_t pid;
 
 	buffer = malloc(sizeof(char) * buffer_size);
@@ -19,7 +19,7 @@ int main(int argc __attribute__((unused)), char *argv[])
 	/*Use getline to accept commmands*/
 	while (getline(&buffer, &buffer_size, stdin) != -1)
 	{
-		buffer[strcspn(buffer, "\n")] = 0;
+		buffer[strcspn(buffer, "\n")] = '\0';
 		if (strcmp(buffer, check_exit) == 0)
 		{
 			free(buffer);
@@ -73,9 +73,9 @@ void execute_program(char *buffer, char *argv[])
 	/*Run execve on the command*/
 	fflush(stdout);
 	value = execvp(argvec[0], argvec);
+	free(divided_string);
 	if (value == -1)
 	{
-		free(divided_string);
 		perror(argv[0]);
 		printf("$ ");
 	}
