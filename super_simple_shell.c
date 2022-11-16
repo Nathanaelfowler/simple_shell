@@ -71,6 +71,7 @@ void execute_program(char *buffer, char *argv[])
 	/*Put the split string inside argv array*/
 	argvec = split_string(buffer, divided_string);
 	/*Run execve on the command*/
+	fflush(stdout);
 	value = execvp(argvec[0], argvec);
 	if (value == -1)
 	{
