@@ -15,7 +15,7 @@ int main(int argc __attribute__((unused)), char *argv[])
 	buffer = malloc(sizeof(char) * buffer_size);
 	if (buffer == NULL)
 		exit(1);
-	putchar('$');
+	/*printf("$ ");*/
 	/*Use getline to accept commmands*/
 	while (getline(&buffer, &buffer_size, stdin) != -1)
 	{
@@ -42,7 +42,7 @@ int main(int argc __attribute__((unused)), char *argv[])
 			buffer = malloc(sizeof(char) * buffer_size);
 			if (buffer == NULL)
 				exit(1);
-			putchar('$');
+			/*printf("$ ");*/
 		}
 	}
 	free(buffer);
@@ -71,13 +71,12 @@ void execute_program(char *buffer, char *argv[])
 	/*Put the split string inside argv array*/
 	argvec = split_string(buffer, divided_string);
 	/*Run execve on the command*/
-	fflush(stdout);
 	value = execvp(argvec[0], argvec);
 	free(divided_string);
 	if (value == -1)
 	{
 		perror(argv[0]);
-		printf("$ ");
+		printf(" ");
 	}
 }
 
