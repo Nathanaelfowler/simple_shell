@@ -15,7 +15,7 @@ int main(int argc __attribute__((unused)), char *argv[])
 	buffer = malloc(sizeof(char) * buffer_size);
 	if (buffer == NULL)
 		exit(1);
-	printf("$ ");
+	printf(" ");
 	/*Use getline to accept commmands*/
 	while (getline(&buffer, &buffer_size, stdin) != -1)
 	{
@@ -42,7 +42,7 @@ int main(int argc __attribute__((unused)), char *argv[])
 			buffer = malloc(sizeof(char) * buffer_size);
 			if (buffer == NULL)
 				exit(1);
-			printf("$ ");
+			printf(" ");
 		}
 	}
 	free(buffer);
